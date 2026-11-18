@@ -4,7 +4,7 @@ description: >
   Local test build of HA Codex Fixed with a spellchecked multiline message
   composer. Installed separately from the original add-on.
 
-version: "1.2.7.6"
+version: "1.2.7.7"
 slug: home_assistant_codex_chat_test
 url: https://github.com/Bert4444/ha-codex-fixed
 
@@ -36,7 +36,7 @@ map:
 
 options:
   model: gpt-5.6-terra
-  terminal_font_size: 14
+  terminal_font_size: 16
   terminal_scrollback: 5000
   terminal_theme: dark
   session_persistence: true

@@ -1,85 +1,152 @@
-/* HA Codex Fixed: responsive writing area. Leaves the original ttyd intact. */
-:root { --ha-codex-composer-h: 116px; }
+/* Chat-inspired message composer; terminal and WebSocket remain unchanged. */
+:root { --ha-codex-composer-h: 128px; }
+body { background: #191b20; }
 body.ha-codex-composer-enabled #terminal-container {
   height: calc(100% - var(--ha-codex-composer-h)) !important;
   min-height: 120px;
+  padding-right: 50px !important;
   box-sizing: border-box;
 }
+.ha-codex-history-rail {
+  position: fixed;
+  z-index: 1000;
+  top: 7px;
+  right: 4px;
+  bottom: 7px;
+  width: 44px;
+  padding: 2px;
+  gap: 7px;
+  border-left: 0;
+  border-radius: 13px;
+  box-sizing: border-box;
+  background: #22252b;
+}
 body.ha-codex-composer-enabled .ha-codex-history-rail {
-  bottom: calc(var(--ha-codex-composer-h) + 5px) !important;
+  bottom: calc(var(--ha-codex-composer-h) + 8px) !important;
+}
+.ha-codex-history-rail button {
+  height: 44px;
+  min-height: 44px;
+  border-radius: 11px;
+  background: #373d46;
+  border: 1px solid #5c6572;
+  color: #f1f4fa;
+  font: 700 22px/1 system-ui,sans-serif;
+  touch-action: manipulation;
+}
+.ha-codex-history-track {
+  min-height: 50px;
+  border-radius: 12px;
+  border: 1px solid #3d444e;
+  background: #121418;
+  touch-action: none;
+}
+.ha-codex-history-thumb {
+  left: 5px;
+  right: 5px;
+  border-radius: 10px;
+  background: #9aaabe;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25), 0 1px 6px rgba(0,0,0,.4);
 }
 #ha-codex-composer {
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 34px; /* reserve existing gold history rail */
+  right: 0;
   z-index: 1200;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
   box-sizing: border-box;
-  padding: 9px 12px calc(9px + env(safe-area-inset-bottom, 0px));
-  background: #202124;
-  border-top: 1px solid #474a53;
-  box-shadow: 0 -6px 18px rgba(0, 0, 0, .25);
-  color: #edf0f5;
-  font: 13px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom,0px));
+  background: #1e2025;
+  border-top: 1px solid #3d414a;
+  box-shadow: 0 -6px 18px rgba(0,0,0,.24);
+  color: #f1f3f6;
+  font: 14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 #ha-codex-composer .ha-codex-composer-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
-#ha-codex-composer .ha-codex-composer-heading { font-weight: 650; font-size: 13px; }
-#ha-codex-composer .ha-codex-composer-status { color: #a6b3c2; font-size: 11px; }
+#ha-codex-composer .ha-codex-composer-heading { font-weight: 650; font-size: 15px; }
+#ha-codex-composer .ha-codex-composer-toolbar { display: flex; align-items: center; gap: 8px; }
+#ha-codex-composer .ha-codex-composer-status { color: #b8c1cf; font-size: 12px; }
+#ha-codex-composer .ha-codex-composer-status::before {
+  content: ''; display: inline-block; width: 7px; height: 7px;
+  margin-right: 6px; background: #6bbf94; border-radius: 50%; vertical-align: middle;
+}
 #ha-codex-composer .ha-codex-compose-area {
   display: flex;
+  align-items: flex-end;
   gap: 8px;
-  align-items: end;
+  padding: 5px 6px 5px 13px;
+  border-radius: 22px;
+  border: 1px solid #596170;
+  background: #2a2e35;
+}
+#ha-codex-composer .ha-codex-compose-area:focus-within {
+  border-color: #adbed4;
+  box-shadow: 0 0 0 1px #adbed4;
 }
 #ha-codex-composer textarea {
   display: block;
   flex: 1;
-  box-sizing: border-box;
-  resize: vertical;
-  min-height: 48px;
-  max-height: 145px;
+  min-width: 0;
   width: 100%;
-  border: 1px solid #5c6370;
-  border-radius: 12px;
-  padding: 11px 12px;
-  background: #303238;
-  color: #f7f7fa;
+  height: 48px;
+  min-height: 48px;
+  max-height: 180px;
+  padding: 12px 0 10px;
+  border: 0;
+  border-radius: 0;
   outline: none;
-  font: 16px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  overflow-y: auto;
+  resize: none;
+  box-sizing: border-box;
+  background: transparent;
+  color: #f7f8fa;
+  font: 16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  overflow-y: hidden;
 }
-#ha-codex-composer textarea:focus { border-color: #91aef5; box-shadow: 0 0 0 1px #91aef5; }
-#ha-codex-composer textarea::placeholder { color: #a4a9b2; }
+#ha-codex-composer textarea:focus { border-color: transparent; box-shadow: none; }
+#ha-codex-composer textarea::placeholder { color: #aeb7c4; }
 #ha-codex-composer button {
   flex-shrink: 0;
-  border: 1px solid #606672;
-  border-radius: 9px;
-  color: #ecf0f7;
-  background: #393d47;
-  padding: 9px 11px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #d9e0e9;
   font: inherit;
-  min-height: 41px;
   cursor: pointer;
 }
-#ha-codex-composer button:disabled { cursor: not-allowed; opacity: .5; }
-#ha-codex-composer button:focus-visible { outline: 2px solid #91aef5; outline-offset: 2px; }
-#ha-codex-composer button.ha-codex-send { background: #dca13a; color: #171a20; border-color: #dca13a; font-weight: 700; }
-#ha-codex-composer .ha-codex-composer-hint { color: #9ca5b0; font-size: 11px; }
-#ha-codex-composer .ha-codex-composer-error { color: #ffb7a4; font-size: 12px; }
-#ha-codex-composer .ha-codex-composer-toolbar { display: flex; gap: 6px; align-items: center; }
-@media (max-width: 600px) {
-  #ha-codex-composer { padding: 7px 8px calc(7px + env(safe-area-inset-bottom, 0px)); }
-  #ha-codex-composer button { padding: 8px 9px; min-height: 44px; }
-  #ha-codex-composer .ha-codex-composer-hint { display: none; }
-  #ha-codex-composer .ha-codex-composer-top { flex-wrap: wrap; }
+#ha-codex-composer button:focus-visible { outline: 2px solid #b9c9e5; outline-offset: 2px; }
+#ha-codex-composer button.ha-codex-send {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: #e9edf5;
+  color: #1b2027;
+  font: 700 25px/1 system-ui,sans-serif;
 }
-/* When deliberately collapsed, retain just the slim toolbar. */
+#ha-codex-composer button.ha-codex-send:disabled {
+  background: #59616c;
+  color: #b9c3cf;
+  cursor: not-allowed;
+}
+#ha-codex-composer .ha-codex-composer-hint { color: #9faab8; font-size: 11px; }
+#ha-codex-composer .ha-codex-composer-error { color: #ffc0b2; font-size: 12px; }
+@media (max-width: 600px) {
+  #ha-codex-composer { padding: 9px 10px calc(9px + env(safe-area-inset-bottom,0px)); }
+  #ha-codex-composer .ha-codex-composer-hint { display: none; }
+  #ha-codex-composer button:not(.ha-codex-send) { min-height: 44px; }
+}
 body.ha-codex-composer-collapsed #ha-codex-composer .ha-codex-compose-area,
 body.ha-codex-composer-collapsed #ha-codex-composer .ha-codex-composer-hint { display: none; }
