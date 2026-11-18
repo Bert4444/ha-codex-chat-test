@@ -150,3 +150,16 @@ body.ha-codex-composer-enabled .ha-codex-history-rail {
 }
 body.ha-codex-composer-collapsed #ha-codex-composer .ha-codex-compose-area,
 body.ha-codex-composer-collapsed #ha-codex-composer .ha-codex-composer-hint { display: none; }
+
+/* On phones, use natural touch swiping across the terminal itself. */
+@media (pointer: coarse) {
+  .ha-codex-history-rail {
+    display: none !important;
+  }
+  body.ha-codex-composer-enabled #terminal-container {
+    padding-right: 0 !important;
+  }
+  #terminal-container, #terminal-container .xterm {
+    touch-action: none;
+  }
+}

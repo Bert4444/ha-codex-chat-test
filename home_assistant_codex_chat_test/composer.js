@@ -47,6 +47,67 @@
         window.dispatchEvent(new Event('resize'));
       }
     };
+    // On touchscreen devices, swipe the terminal itself rather than dragging
+    // the separate history rail. ttyd/xterm still owns scrolling and TUI input:
+    // synthetic wheel events follow the same route as the existing rail.
+    const enableTerminalSwipe = () => {
+      if (!window.matchMedia || !window.matchMedia('(pointer: coarse)').matches) return;
+      const terminal = document.getElementById('terminal-container');
+      if (!terminal || terminal.dataset.haCodexTouchScroll === 'true') return;
+      terminal.dataset.haCodexTouchScroll = 'true';
+      let tracking = false;
+      let scrolling = false;
+      let startX = 0;
+      let startY = 0;
+      let lastY = 0;
+
+      terminal.addEventListener('touchstart', (event) => {
+        if (event.touches.length !== 1) {
+          tracking = false;
+          return;
+        }
+        const touch = event.touches[0];
+        tracking = true;
+        scrolling = false;
+        startX = touch.clientX;
+        startY = touch.clientY;
+        lastY = startY;
+      }, { passive: true, capture: true });
+
+      terminal.addEventListener('touchmove', (event) => {
+        if (!tracking || event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        const totalY = touch.clientY - startY;
+        const totalX = touch.clientX - startX;
+        if (!scrolling) {
+          if (Math.abs(totalY) < 7 || Math.abs(totalY) <= Math.abs(totalX)) return;
+          scrolling = true;
+        }
+        const term = window.term;
+        if (!term || !term.element) return;
+        const delta = lastY - touch.clientY;
+        lastY = touch.clientY;
+        event.preventDefault();
+        event.stopPropagation();
+        if (Math.abs(delta) < 0.5) return;
+        term.element.dispatchEvent(new WheelEvent('wheel', {
+          bubbles: true,
+          cancelable: true,
+          deltaMode: 0,
+          deltaY: delta * 4,
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+        }));
+      }, { passive: false, capture: true });
+
+      const endSwipe = () => {
+        tracking = false;
+        scrolling = false;
+      };
+      terminal.addEventListener('touchend', endSwipe, { passive: true, capture: true });
+      terminal.addEventListener('touchcancel', endSwipe, { passive: true, capture: true });
+    };
+    enableTerminalSwipe();
     document.body.classList.add('ha-codex-composer-enabled');
     if (window.ResizeObserver) new ResizeObserver(fit).observe(panel);
     window.addEventListener('resize', fit);

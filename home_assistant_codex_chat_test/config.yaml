@@ -1,12 +1,12 @@
-name: HA Codex Chat (Test)
+name: HA Codex
 
 description: >
   Local test build of HA Codex Fixed with a spellchecked multiline message
   composer. Installed separately from the original add-on.
 
-version: "1.2.7.7"
+version: "1.2.7.8"
 slug: home_assistant_codex_chat_test
-url: https://github.com/Bert4444/ha-codex-fixed
+url: https://github.com/Bert4444/ha-codex-chat-test
 
 arch:
   - amd64
@@ -23,7 +23,7 @@ ingress_stream: true
 homeassistant_api: true
 
 panel_icon: mdi:robot-outline
-panel_title: HA Codex Chat (Test)
+panel_title: HA Codex
 
 map:
   - type: homeassistant_config
