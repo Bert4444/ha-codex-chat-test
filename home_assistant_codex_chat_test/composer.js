@@ -22,7 +22,7 @@
         <textarea id="ha-codex-message" rows="2" lang="en-GB"
           placeholder="Ask Codex anything…" aria-label="Codex message"
           spellcheck="true" autocorrect="on" autocapitalize="sentences"
-          autocomplete="on"></textarea>
+          autocomplete="off" data-1p-ignore="true"></textarea>
         <button type="button" id="ha-codex-send" class="ha-codex-send" disabled>Send</button>
       </div>
       <div id="ha-codex-composer-feedback" class="ha-codex-composer-error" hidden></div>
